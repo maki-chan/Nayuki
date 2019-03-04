@@ -10,10 +10,11 @@ else()
 endif()
 
 add_library(nayuki
-    common/FrameInfo.cpp
-    common/FrameInfo.h
-    decode/DataFormatException.h
-    decode/FlacLowLevelInput.h
-    encode/BitOutputStream.cpp
-    encode/BitOutputStream.h
-)
+        common/FrameInfo.cpp
+        common/FrameInfo.h
+        decode/DataFormatException.h
+        decode/FlacLowLevelInput.h
+        encode/BitOutputStream.cpp
+        encode/BitOutputStream.h
+        common/SeekTable.h
+        common/SeekTable.cpp common/Utilities.h)

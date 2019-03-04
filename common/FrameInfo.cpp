@@ -25,6 +25,8 @@
 
 #include <cassert>
 
+#include "Utilities.h"
+
 #include "../decode/DataFormatException.h"
 
 namespace Nayuki {
@@ -135,39 +137,7 @@ namespace Nayuki {
 
             uint_fast64_t FrameInfo::readUtf8Integer(Decode::FlacLowLevelInput *in) {
                 int_fast32_t head = in->readUint(8);
-
-                // Calculate leading 1-bits in head
-                int_fast32_t invhead = ~(head << 24);
-                int_fast32_t n = 31;
-                if (invhead == 0)
-                    n = 32;
-                else {
-                    int_fast32_t temp = invhead << 16;
-                    if (temp != 0) {
-                        n -= 16;
-                        invhead = temp;
-                    }
-                    temp = invhead << 8;
-                    if (temp != 0)
-                    {
-                        n -= 8;
-                        invhead = temp;
-                    }
-                    temp = invhead << 4;
-                    if (temp != 0)
-                    {
-                        n -= 4;
-                        invhead = temp;
-                    }
-                    temp = invhead << 2;
-                    if (temp != 0)
-                    {
-                        n -= 2;
-                        invhead = temp;
-                    }
-                    n -= ((uint_fast32_t)(invhead << 1) >> 31);
-                }
-
+                int_fast32_t n = numberOfLeadingZeros((uint_fast32_t)~(head << 24));
                 assert(0 <= n && n <= 8);
                 if (n == 0)
                     return (uint_fast64_t)head;
@@ -282,42 +252,7 @@ namespace Nayuki {
             void FrameInfo::writeUtf8Integer(uint_fast64_t val, Encode::BitOutputStream *out) {
                 if ((val >> 36) != 0)
                     throw std::invalid_argument("Given value does not fit into uint36 type");
-
-                // Calculate leading 0-bits in val
-                uint_fast64_t valcopy = val;
-                int_fast32_t bitLen = 31;
-                if (valcopy == 0)
-                    bitLen = 32;
-                else
-                {
-                    uint_fast64_t temp = valcopy << 16;
-                    if (temp != 0)
-                    {
-                        bitLen -= 16;
-                        valcopy = temp;
-                    }
-                    temp = valcopy << 8;
-                    if (temp != 0)
-                    {
-                        bitLen -= 8;
-                        valcopy = temp;
-                    }
-                    temp = valcopy << 4;
-                    if (temp != 0)
-                    {
-                        bitLen -= 4;
-                        valcopy = temp;
-                    }
-                    temp = valcopy << 2;
-                    if (temp != 0)
-                    {
-                        bitLen -= 2;
-                        valcopy = temp;
-                    }
-                    bitLen -= ((uint_fast32_t)(valcopy << 1) >> 31);
-                }
-
-                bitLen = 64 - bitLen;
+                int_fast32_t bitLen = 64 - numberOfLeadingZeros(val);
                 if (bitLen <= 7)
                     out->writeInt(8, (int_fast32_t)val);
                 else {
