@@ -29,6 +29,7 @@ matrix:
     - os: linux
       dist: trusty
       compiler: clang
+    - os: windows
 
 before_install:
   - eval "${MATRIX_EVAL}"
@@ -36,4 +37,4 @@ before_install:
 script:
   - mkdir build && cd build
   - cmake ..
-  - make
+  - cmake --build .
