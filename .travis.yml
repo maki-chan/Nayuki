@@ -2,21 +2,27 @@ language: cpp
 
 matrix:
   include:
-    - os: osx
+    - name: "macOS 10.11 (Xcode 8) - LLVM"
+      os: osx
       osx_image: xcode8
-    - os: osx
+    - name: "macOS 10.13 (Xcode 10.1) - LLVM"
+      os: osx
       osx_image: xcode10.1
-    - os: osx
+    - name: "macOS 10.13 (Xcode 10.1) - GCC 8"
+      os: osx
       osx_image: xcode10.1
       env:
         - MATRIX_EVAL="brew install gcc && CC=gcc-8 && CXX=g++-8"
-    - os: linux
+    - name: "Ubuntu Xenial (16.04) - GCC"
+      os: linux
       dist: xenial
       compiler: gcc
-    - os: linux
+    - name: "Ubuntu Xenial (16.04) - Clang"
+      os: linux
       dist: xenial
       compiler: clang
-    - os: linux
+    - name: "Ubuntu Trusty (14.04) - GCC 5"
+      os: linux
       dist: trusty
       addons:
         apt:
@@ -26,9 +32,17 @@ matrix:
             - g++-5
       env:
         - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
-    - os: linux
+    - name: "Ubuntu Trusty (14.04) - Clang"
+      os: linux
       dist: trusty
       compiler: clang
+    - name: "Windows - Visual Studio"
+      os: windows
+
+branches:
+  only:
+    - master
+    - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 
 before_install:
   - eval "${MATRIX_EVAL}"
@@ -36,4 +50,4 @@ before_install:
 script:
   - mkdir build && cd build
   - cmake ..
-  - make
+  - cmake --build .
