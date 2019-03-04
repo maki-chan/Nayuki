@@ -3,6 +3,12 @@ project(Nayuki)
 
 set(CMAKE_CXX_STANDARD 14)
 
+if(MSVC)
+    add_compile_options(/W4)
+else()
+    add_compile_options(-Wall -Wextra -pedantic)
+endif()
+
 add_library(nayuki
     common/FrameInfo.cpp
     common/FrameInfo.h

@@ -118,12 +118,12 @@ namespace Nayuki {
                 /**
                  * Current state of the CRC calculations. Always a `uint8` value.
                  */
-                uint_fast8_t crc8;
+                uint_fast32_t crc8;
 
                 /**
                  * Current state of the CRC calculations. Always a `uint16` value.
                  */
-                uint_fast16_t crc16;
+                uint_fast32_t crc16;
 
                 /**
                  * Either returns silently or throws an exception.
