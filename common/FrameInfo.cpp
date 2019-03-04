@@ -137,7 +137,7 @@ namespace Nayuki {
 
             uint_fast64_t FrameInfo::readUtf8Integer(Decode::FlacLowLevelInput *in) {
                 int_fast32_t head = in->readUint(8);
-                int_fast32_t n = numberOfLeadingZeros((uint_fast32_t)~(head << 24));
+                int_fast32_t n = numberOfLeadingZeros((uint32_t)~(head << 24));
                 assert(0 <= n && n <= 8);
                 if (n == 0)
                     return (uint_fast64_t)head;
@@ -252,7 +252,7 @@ namespace Nayuki {
             void FrameInfo::writeUtf8Integer(uint_fast64_t val, Encode::BitOutputStream *out) {
                 if ((val >> 36) != 0)
                     throw std::invalid_argument("Given value does not fit into uint36 type");
-                int_fast32_t bitLen = 64 - numberOfLeadingZeros(val);
+                int_fast32_t bitLen = 64 - numberOfLeadingZeros((uint64_t)val);
                 if (bitLen <= 7)
                     out->writeInt(8, (int_fast32_t)val);
                 else {
