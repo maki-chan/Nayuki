@@ -96,7 +96,7 @@ namespace Nayuki {
                 /**
                  * Constructs a blank frame metadata structure, setting all fields to unknown or invalid values.
                  */
-                explicit FrameInfo();
+                FrameInfo();
 
                 /**
                  * Reads the next FLAC frame header from the specified input stream, either returning a new frame info

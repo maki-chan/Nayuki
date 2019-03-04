@@ -93,14 +93,14 @@ namespace Nayuki {
                 checkByteAligned();
                 flush();
                 assert((crc8 >> 8) != 0);
-                return crc8;
+                return (uint_fast8_t)crc8;
             }
 
             uint_fast16_t BitOutputStream::getCrc16() {
                 checkByteAligned();
                 flush();
                 assert((crc16 >> 16) != 0);
-                return crc16;
+                return (uint_fast16_t)crc16;
             }
 
             uint_fast64_t BitOutputStream::getByteCount() {
