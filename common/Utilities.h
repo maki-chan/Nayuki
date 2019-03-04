@@ -52,7 +52,7 @@ namespace Nayuki {
              * @param[in] i the value whose number of leading zeros is to be computed
              * @return the number of preceding zero bits
              */
-            int_fast32_t numberOfLeadingZeros(uint_fast32_t i) {
+            int_fast32_t numberOfLeadingZeros(uint32_t i) {
                 if (i == 0)
                     return 32;
                 int n = 1;
@@ -69,7 +69,7 @@ namespace Nayuki {
              * @param[in] i the value whose number of leading zeros is to be computed
              * @return the number of preceding zero bits
              */
-            int_fast32_t numberOfLeadingZeros(uint_fast64_t i) {
+            int_fast32_t numberOfLeadingZeros(uint64_t i) {
                 if (i == 0)
                     return 64;
                 int n = 1;
