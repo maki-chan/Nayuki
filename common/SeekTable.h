@@ -88,10 +88,9 @@ namespace Nayuki {
                  * This constructor does not check the validity of the seek points, namely the ordering of seek point
                  * offsets, so calling `checkValues()` on the freshly constructed object can fail. However, this does
                  * guarantee that every point's `frameSamples` field is a `uint16`.
-                 * @param[in] b      the metadata block's payload data to parse (not `null`)
-                 * @param[in] length the length of the payload data
+                 * @param[in] b the metadata block's payload data to parse (not `null`)
                  */
-                SeekTable(uint_fast8_t b[], int_fast32_t length);
+                explicit SeekTable(std::vector<uint_fast8_t> b);
 
                 /**
                  * Constructs a seek table by parsing the given byte array representing the metadata block. (The array
@@ -100,9 +99,10 @@ namespace Nayuki {
                  * This constructor does not check the validity of the seek points, namely the ordering of seek point
                  * offsets, so calling `checkValues()` on the freshly constructed object can fail. However, this does
                  * guarantee that every point's `frameSamples` field is a `uint16`.
-                 * @param[in] b the metadata block's payload data to parse (not `null`)
+                 * @param[in] b      the metadata block's payload data to parse (not `null`)
+                 * @param[in] length the length of the payload data
                  */
-                explicit SeekTable(std::vector<uint_fast8_t> b);
+                SeekTable(uint_fast8_t b[], uint_fast32_t length);
 
                 /**
                  * Checks the state of this object and returns silently if all these criteria pass:

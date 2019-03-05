@@ -34,6 +34,42 @@ namespace Nayuki {
              * A bit-oriented output stream, with other methods tailored for FLAC usage (such as CRC calculation).
              */
             class BitOutputStream final {
+            private:
+                /**
+                 * The underlying byte-based output stream to write to.
+                 */
+                std::ostream *out;
+
+                /**
+                 * Only the bottom `bitBufferLen` bits are valid; the top bits are garbage.
+                 */
+                uint_fast64_t bitBuffer;
+
+                /**
+                 * Number of bits currently in the buffer. Always in the range [0, 64].
+                 */
+                uint_fast8_t bitBufferLen;
+
+                /**
+                 * Number of bytes written since the start of stream.
+                 */
+                uint_fast64_t byteCount;
+
+                /**
+                 * Current state of the CRC calculations. Always a `uint8` value.
+                 */
+                uint_fast32_t crc8;
+
+                /**
+                 * Current state of the CRC calculations. Always a `uint16` value.
+                 */
+                uint_fast32_t crc16;
+
+                /**
+                 * Either returns silently or throws an exception.
+                 */
+                void checkByteAligned();
+
             public:
                 /**
                  * Constructs a FLAC-oriented bit output stream from the given byte-based output stream.
@@ -49,8 +85,8 @@ namespace Nayuki {
                 /**
                  * Writes the lowest `n` bits of the given value to this bit output stream. This doesn't care whether
                  * `val` represents a signed or unsigned integer.
-                 * @param n   number of bits to write
-                 * @param val integer containing the bits to write
+                 * @param[in] n   number of bits to write
+                 * @param[in] val integer containing the bits to write
                  */
                 void writeInt(int_fast8_t n, int_fast32_t val);
 
@@ -93,42 +129,6 @@ namespace Nayuki {
                  * for calling `close()` on the underlying output stream if it uses native resources.
                  */
                 void close();
-
-            private:
-                /**
-                 * The underlying byte-based output stream to write to.
-                 */
-                std::ostream *out;
-
-                /**
-                 * Only the bottom `bitBufferLen` bits are valid; the top bits are garbage.
-                 */
-                uint_fast64_t bitBuffer;
-
-                /**
-                 * Number of bits currently in the buffer. Always in the range [0, 64].
-                 */
-                uint_fast8_t bitBufferLen;
-
-                /**
-                 * Number of bytes written since the start of stream.
-                 */
-                uint_fast64_t byteCount;
-
-                /**
-                 * Current state of the CRC calculations. Always a `uint8` value.
-                 */
-                uint_fast32_t crc8;
-
-                /**
-                 * Current state of the CRC calculations. Always a `uint16` value.
-                 */
-                uint_fast32_t crc16;
-
-                /**
-                 * Either returns silently or throws an exception.
-                 */
-                void checkByteAligned();
             };
         }
     }

@@ -34,23 +34,23 @@ namespace Nayuki {
                 points = std::vector<SeekPoint>();
             }
 
-            SeekTable::SeekTable(uint_fast8_t *b, int_fast32_t length) {
+            SeekTable::SeekTable(std::vector<uint_fast8_t> b) : SeekTable(b.data(), b.size()) {
+                // Nothing extra to do
+            }
+
+            SeekTable::SeekTable(uint_fast8_t b[], uint_fast32_t length) {
                 points = std::vector<SeekPoint>();
                 if (b == nullptr)
                     throw std::invalid_argument("Given payload data is null");
                 if (length % 18 != 0)
                     throw std::invalid_argument("Data contains a partial seek point");
-                for (int_fast32_t i = 0; i < length; i += 18) {
+                for (uint_fast32_t i = 0; i < length; i += 18) {
                     SeekPoint p = SeekPoint();
                     p.sampleOffset = convertToUint64(b + i);
                     p.fileOffset = convertToUint64(b + i + 8);
                     p.frameSamples = convertToUint16(b + i + 16);
                     points.push_back(p);
                 }
-            }
-
-            SeekTable::SeekTable(std::vector<uint_fast8_t> b) : SeekTable(b.data(), b.size()) {
-                // Nothing extra to do
             }
 
             void SeekTable::checkValues() {

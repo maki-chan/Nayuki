@@ -41,12 +41,104 @@ namespace Nayuki {
              * freely when no method call is active.
              */
             class FrameInfo final {
+            private:
+                /**
+                 * Lookup table to translate block sizes to their code or vice versa.
+                 */
+                static const std::vector<std::array<int_fast32_t, 2>> BLOCK_SIZE_CODES;
+
+                /**
+                 * Lookup table to translate sample depths to their code or vice versa.
+                 */
+                static const std::vector<std::array<int_fast32_t, 2>> SAMPLE_DEPTH_CODES;
+
+                /**
+                 * Lookup table to translate sample rates to their code or vice versa.
+                 */
+                static const std::vector<std::array<int_fast32_t, 2>> SAMPLE_RATE_CODES;
+
+                /**
+                 * Reads 1 to 7 whole bytes from the input stream. Return value is a `uint36`.
+                 * @param[in,out] in the input stream to read from (not `null`)
+                 * @return the decoded integer value
+                 */
+                static uint_fast64_t readUtf8Integer(Decode::FlacLowLevelInput *in);
+
+                /**
+                 * Decodes the block size code.
+                 * @param[in]     code the encoded block size
+                 * @param[in,out] in   the input stream to read from (not `null`)
+                 * @return the decoded block size, a value in the range [1, 65536]
+                 */
+                static int_fast32_t decodeBlockSize(uint_fast8_t code, Decode::FlacLowLevelInput *in);
+
+                /**
+                 * Decodes the sample rate code.
+                 * @param[in]     code the encoded sample rate
+                 * @param[in,out] in   the input stream to read from (not `null`)
+                 * @return the decoded sample rate, a value in the range [-1, 655350]
+                 */
+                static int_fast32_t decodeSampleRate(uint_fast8_t code, Decode::FlacLowLevelInput *in);
+
+                /**
+                 * Decodes the sample depth.
+                 * @param[in] code the encoded sample depth
+                 * @return the decoded sample depth, a value in the range [-1, 24]
+                 */
+                static int_fast32_t decodeSampleDepth(uint_fast8_t code);
+
+                /**
+                 * Given a `uint36` value, this writes 1 to 7 whole bytes to the given output stream.
+                 * @param[in]     val the `uint36` value to write
+                 * @param[in,out] out the output stream to write to
+                 */
+                static void writeUtf8Integer(uint_fast64_t val, Encode::BitOutputStream *out);
+
+                /**
+                 * Returns a `uint4` value representing the given block size.
+                 * @param[in] blockSize the block size to encode
+                 * @return the `uint4` representation of the block size
+                 */
+                static uint_fast8_t getBlockSizeCode(int_fast32_t blockSize);
+
+                /**
+                 * Returns a uint4 value representing the given sample rate.
+                 * @param[in] sampleRate the sample rate to encode
+                 * @return the `uint4` representation of the sample rate
+                 */
+                static uint_fast8_t getSampleRateCode(int_fast32_t sampleRate);
+
+                /**
+                 * Returns a `uint3` value representing the given sample depth.
+                 * @param[in] sampleDepth the sample depth to encode
+                 * @return the `uint3` representation of the sample depth
+                 */
+                static uint_fast8_t getSampleDepthCode(int_fast32_t sampleDepth);
+
+                /**
+                 * Does a lookup in one of the code tables and tries to get the value in index 1 for the corresponding
+                 * key in index 0.
+                 * @param[in] table the code table to search in
+                 * @param[in] key   the key to search for
+                 * @return the result of the lookup or -1 if nothing was found
+                 */
+                static int_fast32_t searchFirst(std::vector<std::array<int_fast32_t, 2>> table, int_fast32_t key);
+
+                /**
+                 * Does a lookup in one of the code tables and tries to get the value in index 0 for the corresponding
+                 * key in index 1.
+                 * @param[in] table the code table to search in
+                 * @param[in] key   the key to search for
+                 * @return the result of the lookup or -1 if nothing was found
+                 */
+                static int_fast32_t searchSecond(std::vector<std::array<int_fast32_t, 2>> table, int_fast32_t key);
+
             public:
                 /**
 	             * The index of this frame, where the foremost frame has index 0 and each subsequent frame increments
                  * it. This is either a `uint31` value or -1 if unused. Exactly one of the fields frameIndex and
                  * sampleOffset is equal to -1 (not both nor neither). This value can only be used if the stream info's
-                 * `minBlockSize = maxBlockSize` (constant block size encoding style).
+                 * `minBlockSize == maxBlockSize` (constant block size encoding style).
 	             */
                 int_fast32_t frameIndex;
 
@@ -125,98 +217,6 @@ namespace Nayuki {
                  * @param[in,out] out the output stream to write to (not `null`)
                  */
                 void writeHeader(Encode::BitOutputStream *out);
-
-            private:
-                /**
-                 * Lookup table to translate block sizes to their code or vice versa.
-                 */
-                static const std::vector<std::array<int_fast32_t, 2>> BLOCK_SIZE_CODES;
-
-                /**
-                 * Lookup table to translate sample depths to their code or vice versa.
-                 */
-                static const std::vector<std::array<int_fast32_t, 2>> SAMPLE_DEPTH_CODES;
-
-                /**
-                 * Lookup table to translate sample rates to their code or vice versa.
-                 */
-                static const std::vector<std::array<int_fast32_t, 2>> SAMPLE_RATE_CODES;
-
-                /**
-                 * Reads 1 to 7 whole bytes from the input stream. Return value is a `uint36`.
-                 * @param[in,out] in   the input stream to read from (not `null`)
-                 * @return the decoded integer value
-                 */
-                static uint_fast64_t readUtf8Integer(Decode::FlacLowLevelInput *in);
-
-                /**
-                 * Decodes the block size code.
-                 * @param[in]     code the encoded block size
-                 * @param[in,out] in   the input stream to read from (not `null`)
-                 * @return the decoded block size, a value in the range [1, 65536]
-                 */
-                static int_fast32_t decodeBlockSize(uint_fast8_t code, Decode::FlacLowLevelInput *in);
-
-                /**
-                 * Decodes the sample rate code.
-                 * @param[in] code the encoded sample rate
-                 * @param[in,out] in   the input stream to read from (not `null`)
-                 * @return the decoded sample rate, a value in the range [-1, 655350]
-                 */
-                static int_fast32_t decodeSampleRate(uint_fast8_t code, Decode::FlacLowLevelInput *in);
-
-                /**
-                 * Decodes the sample depth.
-                 * @param[in] code the encoded sample depth
-                 * @return the decoded sample depth, a value in the range [-1, 24]
-                 */
-                static int_fast32_t decodeSampleDepth(uint_fast8_t code);
-
-                /**
-                 * Given a `uint36` value, this writes 1 to 7 whole bytes to the given output stream.
-                 * @param[in]     val the `uint36` value to write
-                 * @param[in,out] out the output stream to write to
-                 */
-                static void writeUtf8Integer(uint_fast64_t val, Encode::BitOutputStream *out);
-
-                /**
-                 * Returns a `uint4` value representing the given block size.
-                 * @param[in] blockSize the block size to encode
-                 * @return the `uint4` representation of the block size
-                 */
-                static uint_fast8_t getBlockSizeCode(int_fast32_t blockSize);
-
-                /**
-                 * Returns a uint4 value representing the given sample rate.
-                 * @param[in] sampleRate the sample rate to encode
-                 * @return the `uint4` representation of the sample rate
-                 */
-                static uint_fast8_t getSampleRateCode(int_fast32_t sampleRate);
-
-                /**
-                 * Returns a `uint3` value representing the given sample depth.
-                 * @param[in] sampleDepth the sample depth to encode
-                 * @return the `uint3` representation of the sample depth
-                 */
-                static uint_fast8_t getSampleDepthCode(int_fast32_t sampleDepth);
-
-                /**
-                 * Does a lookup in one of the code tables and tries to get the value in index 1 for the corresponding
-                 * key in index 0.
-                 * @param[in] table the code table to search in
-                 * @param[in] key   the key to search for
-                 * @return the result of the lookup or -1 if nothing was found
-                 */
-                static int_fast32_t searchFirst(std::vector<std::array<int_fast32_t, 2>> table, int_fast32_t key);
-
-                /**
-                 * Does a lookup in one of the code tables and tries to get the value in index 0 for the corresponding
-                 * key in index 1.
-                 * @param[in] table the code table to search in
-                 * @param[in] key   the key to search for
-                 * @return the result of the lookup or -1 if nothing was found
-                 */
-                static int_fast32_t searchSecond(std::vector<std::array<int_fast32_t, 2>> table, int_fast32_t key);
             };
         }
     }
