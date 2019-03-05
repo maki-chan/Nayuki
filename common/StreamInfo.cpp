@@ -106,7 +106,7 @@ namespace Nayuki {
                 if (numSamples != 0 && (uint_fast64_t) meta->blockSize > numSamples)
                     throw Decode::DataFormatException("Block size exceeds total number of samples");
 
-                if (meta->blockSize > maxBlockSize)
+                if ((uint_fast64_t) meta->blockSize > maxBlockSize)
                     throw Decode::DataFormatException("Block size exceeds maximum");
                 // Note: If minBlockSize == maxBlockSize, then the final block
                 // in the stream is allowed to be smaller than minBlockSize
@@ -159,7 +159,7 @@ namespace Nayuki {
 
                 // Convert samples to a stream of bytes, compute hash
                 uint_fast8_t numBytes = depth / 8;
-                uint_fast64_t bufSize = chans * numBytes * std::min(numSamples, 2048ULL);
+                uint_fast64_t bufSize = chans * numBytes * std::min(numSamples, (uint_fast64_t) 2048);
                 uint_fast8_t *buf = new uint_fast8_t[bufSize];
                 for (uint_fast64_t i = 0, l = 0; i < numSamples; i++) {
                     for (int j = 0; j < chans; j++) {

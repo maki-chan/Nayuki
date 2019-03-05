@@ -5,14 +5,21 @@ matrix:
     - name: "macOS 10.11 (Xcode 8) - LLVM"
       os: osx
       osx_image: xcode8
+      env:
+        - MATRIX_EVAL="brew install openssl@1.1"
+        - ADDITIONAL_CMAKE_OPTIONS="-DOPENSSL_ROOT_DIR=/usr/local/opt/openssl@1.1"
     - name: "macOS 10.13 (Xcode 10.1) - LLVM"
       os: osx
       osx_image: xcode10.1
+      env:
+        - MATRIX_EVAL="brew install openssl@1.1"
+        - ADDITIONAL_CMAKE_OPTIONS="-DOPENSSL_ROOT_DIR=/usr/local/opt/openssl@1.1"
     - name: "macOS 10.13 (Xcode 10.1) - GCC 8"
       os: osx
       osx_image: xcode10.1
       env:
-        - MATRIX_EVAL="brew install gcc && CC=gcc-8 && CXX=g++-8"
+        - MATRIX_EVAL="brew install gcc openssl@1.1 && CC=gcc-8 && CXX=g++-8"
+        - ADDITIONAL_CMAKE_OPTIONS="-DOPENSSL_ROOT_DIR=/usr/local/opt/openssl@1.1"
     - name: "Ubuntu Xenial (16.04) - GCC"
       os: linux
       dist: xenial
@@ -38,6 +45,9 @@ matrix:
       compiler: clang
     - name: "Windows - Visual Studio"
       os: windows
+      env:
+        - MATRIX_EVAL="choco install openssl.light --params \"/InstallDir:C:\OpenSSL""
+        - ADDITIONAL_CMAKE_OPTIONS="-DOPENSSL_ROOT_DIR=C:\OpenSSL"
 
 branches:
   only:
@@ -49,5 +59,5 @@ before_install:
 
 script:
   - mkdir build && cd build
-  - cmake ..
+  - cmake "${ADDITIONAL_CMAKE_OPTIONS}" ..
   - cmake --build .
