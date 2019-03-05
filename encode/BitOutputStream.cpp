@@ -59,7 +59,7 @@ namespace Nayuki {
                 bitBuffer <<= n;
                 bitBuffer |= val & ((1L << n) - 1);
                 bitBufferLen += n;
-                assert(0 <= bitBufferLen && bitBufferLen <= 64);
+                assert(bitBufferLen <= 64);
             }
 
             void BitOutputStream::flush() {
@@ -79,7 +79,7 @@ namespace Nayuki {
                         assert((crc16 >> 16) == 0);
                     }
                 }
-                assert(0 <= bitBufferLen && bitBufferLen <= 64);
+                assert(bitBufferLen <= 64);
                 out->flush();
             }
 

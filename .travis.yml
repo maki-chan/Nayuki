@@ -37,10 +37,6 @@ matrix:
       os: linux
       dist: trusty
       compiler: clang
-    - name: "Windows - Visual Studio"
-      os: windows
-      env:
-        - MATRIX_EVAL="choco install openssl.light"
 
 branches:
   only:

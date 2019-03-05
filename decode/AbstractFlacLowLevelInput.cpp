@@ -130,7 +130,7 @@ namespace Nayuki {
                         throw std::runtime_error("End of data");
                     bitBuffer = (bitBuffer << 8) | b;
                     bitBufferLen += 8;
-                    assert(0 <= bitBufferLen && bitBufferLen <= 64);
+                    assert(bitBufferLen <= 64);
                 }
                 uint_fast32_t result = (uint_fast32_t) (bitBuffer >> (bitBufferLen - n));
                 if (n != 32) {
@@ -138,7 +138,7 @@ namespace Nayuki {
                     assert((result >> n) == 0);
                 }
                 bitBufferLen -= n;
-                assert(0 <= bitBufferLen && bitBufferLen <= 64);
+                assert(bitBufferLen <= 64);
                 return result;
             }
 
