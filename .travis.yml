@@ -2,12 +2,6 @@ language: cpp
 
 matrix:
   include:
-    - name: "macOS 10.11 (Xcode 8) - LLVM"
-      os: osx
-      osx_image: xcode8
-      env:
-        - MATRIX_EVAL="brew install openssl@1.1"
-        - ADDITIONAL_CMAKE_OPTIONS="-DOPENSSL_ROOT_DIR=/usr/local/opt/openssl@1.1"
     - name: "macOS 10.13 (Xcode 10.1) - LLVM"
       os: osx
       osx_image: xcode10.1
@@ -46,7 +40,7 @@ matrix:
     - name: "Windows - Visual Studio"
       os: windows
       env:
-        - MATRIX_EVAL="choco install openssl.light --params \"/InstallDir:C:\OpenSSL""
+        - MATRIX_EVAL="choco install openssl.light --params /InstallDir:C:\OpenSSL"
         - ADDITIONAL_CMAKE_OPTIONS="-DOPENSSL_ROOT_DIR=C:\OpenSSL"
 
 branches:
