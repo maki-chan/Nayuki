@@ -29,7 +29,7 @@
 namespace Nayuki {
     namespace FLAC {
         namespace Decode {
-            class ByteArrayFlacInput final : AbstractFlacLowLevelInput {
+            class ByteArrayFlacInput final : public AbstractFlacLowLevelInput {
             private:
                 /**
                  * The underlying byte array to read from.
@@ -52,8 +52,8 @@ namespace Nayuki {
             public:
                 /**
                  * Creates a new FLAC input stream with a given array of bytes.
-                 * @param b   the FLAC data for the input stream as byte array
-                 * @param len the length of the given FLAC data in bytes
+                 * @param[in] b   the FLAC data for the input stream as byte array
+                 * @param[in] len the length of the given FLAC data in bytes
                  */
                 ByteArrayFlacInput(uint_fast8_t *b, uint_fast64_t len);
 

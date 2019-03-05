@@ -29,7 +29,7 @@
 namespace Nayuki {
     namespace FLAC {
         namespace Decode {
-            class AbstractFlacLowLevelInput : FlacLowLevelInput {
+            class AbstractFlacLowLevelInput : public FlacLowLevelInput {
             private:
                 /**
                  * Constant representing the length of the byte buffer.
@@ -154,7 +154,7 @@ namespace Nayuki {
                 /**
                  * Updates the two CRC values with data from the byte buffer in the range
                  * [`crcStartIndex`, `byteBufferIndex - unusedTrailingBytes`].
-                 * @param unusedTrailingBytes negative offset for bytes used in CRC calculation
+                 * @param[in] unusedTrailingBytes negative offset for bytes used in CRC calculation
                  */
                 void updateCrcs(int_fast32_t unusedTrailingBytes);
 
@@ -162,7 +162,7 @@ namespace Nayuki {
                 /**
                  * When a subclass handles `seekTo()` and didn't throw an exception, it must call this method to flush
                  * the buffers of upcoming data.
-                 * @param pos new start position of the byte buffer
+                 * @param[in] pos new start position of the byte buffer
                  */
                 void positionChanged(uint_fast64_t pos);
 
@@ -170,9 +170,9 @@ namespace Nayuki {
                  * Reads up to `len` bytes from the underlying byte-based input stream into the given array subrange.
                  * Returns a value in the range [0, `len`] for a successful read, or -1 if the end of stream was
                  * reached.
-                 * @param buf the byte array which should be filled
-                 * @param off the starting offset in the byte array to fill
-                 * @param len the number of bytes to read from the input stream and to write to the given array
+                 * @param[out] buf the byte array which should be filled
+                 * @param[in]  off the starting offset in the byte array to fill
+                 * @param[in]  len the number of bytes to read from the input stream and to write to the given array
                  * @return number of bytes read and written, or -1
                  */
                 virtual int_fast32_t readUnderlying(uint_fast8_t buf[], uint_fast64_t off, uint_fast64_t len) = 0;
@@ -182,6 +182,8 @@ namespace Nayuki {
                  * Creates a default and empty input stream.
                  */
                 AbstractFlacLowLevelInput();
+
+                virtual ~AbstractFlacLowLevelInput() = default;
 
                 virtual uint_fast64_t getPosition();
 
