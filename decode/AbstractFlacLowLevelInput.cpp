@@ -154,7 +154,7 @@ namespace Nayuki {
                                                           int_fast32_t end) {
                 if (param < 0 || param > 31)
                     throw std::invalid_argument("Rice Code Parameter has to be between 0 and 31 inclusive");
-                uint_fast64_t unaryLimit = 1UL << (53 - param);
+                int_fast64_t unaryLimit = 1L << (53 - param);
 
                 uint_fast8_t *consumeTable = RICE_DECODING_CONSUMED_TABLES[param];
                 int_fast32_t *valueTable = RICE_DECODING_VALUE_TABLES[param];

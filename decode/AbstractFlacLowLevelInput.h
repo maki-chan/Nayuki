@@ -175,7 +175,7 @@ namespace Nayuki {
                  * @param len the number of bytes to read from the input stream and to write to the given array
                  * @return number of bytes read and written, or -1
                  */
-                virtual int_fast32_t readUnderlying(uint_fast8_t buf[], int off, int len) = 0;
+                virtual int_fast32_t readUnderlying(uint_fast8_t buf[], uint_fast64_t off, uint_fast64_t len) = 0;
 
             public:
                 /**
