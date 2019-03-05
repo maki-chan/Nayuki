@@ -4,7 +4,7 @@ project(Nayuki)
 set(CMAKE_CXX_STANDARD 14)
 
 set(OPENSSL_USE_STATIC_LIBS TRUE)
-find_package(OpenSSL 1.1 REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 if(MSVC)
     add_compile_options(/W4)
