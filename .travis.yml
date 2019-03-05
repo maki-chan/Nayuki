@@ -40,8 +40,7 @@ matrix:
     - name: "Windows - Visual Studio"
       os: windows
       env:
-        - MATRIX_EVAL="choco install openssl.light --params /InstallDir:C:\OpenSSL"
-        - ADDITIONAL_CMAKE_OPTIONS="-DOPENSSL_ROOT_DIR=C:\OpenSSL"
+        - MATRIX_EVAL="choco install openssl.light"
 
 branches:
   only:
